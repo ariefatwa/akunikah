@@ -14,7 +14,7 @@
     <div class="px-4 py-5 my-5 text-center">
     <img class="d-block mx-auto mb-4" src="https://getbootstrap.com/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
      
-     <h4>Hello, <span class="hack53-firstname">{firstname}</span></h4><h4>Welcome to <span class="hack53-company">{company}</span></h4>
+     <h4>Hello, <span class="firstname">{firstname}</span></h4><h4>Welcome to <span class="company">{company}</span></h4>
  
     <h1 class="display-5 fw-bold">Centered hero</h1>
     <div class="col-lg-6 mx-auto">
@@ -30,9 +30,6 @@
     
     
     
-    
-    
-  </body>
   
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
 
@@ -47,11 +44,13 @@ if(window.location.search){
   const urlParams = new URLSearchParams(window.location.search);
   // get the value of the 'firstname' search param
   // and set it as the .firstname text
-  $('.hack53-firstname').text(urlParams.get('firstname'));
+  $('.firstname').text(urlParams.get('firstname'));
   // get the value of the 'company' search param
   // and set it as the .company text
-  $('.hack53-company').text(urlParams.get('company'));
+  $('.company').text(urlParams.get('company'));
 }
 </script>
+
+</body>
 
 </html>
