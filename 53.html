@@ -39,8 +39,81 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
   
 
-<!-- F’in sweet Webflow Hacks -->
 <script>
+
+$(document).ready(()=> {
+  	let hcode = '', bcode = ''; 
+	$('script, style').each((i,elem)=>{   
+    	if($(elem).attr('data-info') && $(elem).attr('data-info').match(/hacks-.*?/)){	
+          	if($(elem).attr('data-info') === 'hacks-head'){
+            	hcode += '\n' + elem.outerHTML.replace(/ data-info="hacks.*?"/,'');            	
+            }
+          	else{
+            	bcode += '\n' + elem.outerHTML.replace(/ data-info="hacks.*?"/,'');
+            }          	
+        }      	
+	});
+  
+    let headMirror, bodyMirror;
+    if(hcode){
+      headMirror = setupCodeMirror('head','Inside &lt;head&gt; tag');
+    }
+    if(bcode){
+      bodyMirror = setupCodeMirror('body','Before &lt;/body&gt; tag');
+    }
+  
+  	$('.hack-code-inner:not(.hide)').each((i, mirror)=>{
+      const observer = new IntersectionObserver((entries, observer) => { 
+        entries.forEach(entry => {
+          if(entry.isIntersecting){ 
+            if(entry.target.classList.contains('head')){
+              headMirror.setValue(`<!-- F’in sweet Webflow Hacks -->${hcode}\n`);
+            }
+            else if(entry.target.classList.contains('body')){
+              bodyMirror.setValue(`<!-- F’in sweet Webflow Hacks -->${bcode}\n`);
+            }
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { 
+        threshold: 0 
+      });
+  
+      observer.observe(mirror);
+    });
+  
+  	$('.copy-code').click(function(){
+      	const preTxt = '<!-- F’in sweet Webflow Hacks -->';
+    	$(this).closest('.hack-code-inner.head').length ? copyTextToClipboard(preTxt+hcode) : copyTextToClipboard(preTxt+bcode);
+    	const origTxt = $(this).text().trim();
+    	$(this).text('Copied!');
+    	setTimeout(()=> $(this).text(origTxt), 1000);
+    });
+  
+  	function setupCodeMirror(section, heading){
+    	$('.hack-footer .hack-code').insertBefore('.hack-footer').removeClass('hide');         		
+    	const $hackCode = $(`.hack-code-inner.${section}`);
+    	$hackCode.removeClass('hide');
+    	$hackCode.prepend(`<div class="hack-code-text">${heading}</div>`);
+  		return initCodeMirror($hackCode[0]);
+    }
+  
+  	function initCodeMirror(snippet){
+		const theMirror = CodeMirror(snippet, {
+  			mode: 'htmlmixed',
+  			htmlMode: true,
+  			lineNumbers: true,
+  			showCursorWhenSelecting: true
+		});
+        return theMirror;
+	}
+});
+
+</script>
+
+<!-- F’in sweet Webflow Hacks -->
+<script data-info='hacks-body'>
 // if the page url has a query string
 if(window.location.search){
   // get all url search params from the query string
